@@ -81,7 +81,7 @@ function App() {
       })
       .catch((error) => alert(error.message));
 
-      setOpen(false);
+    setOpen(false);
   };
 
   const signin = (event) => {
@@ -96,13 +96,6 @@ function App() {
 
   return (
     <div className="App">
-      
-      {user?.displayName ? (
-        <ImageUpload username={user.displayName} />
-      ): (
-        <h3>Sorry you need to login first</h3>
-      )}
-
       <Modal open={open} onClose={() => setOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
           <form className="app__signup">
@@ -172,25 +165,34 @@ function App() {
           src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
           alt=""
         />
+        {user ? (
+          <Button onClick={() => auth.signOut()}>Logout</Button>
+        ) : (
+          <div className="login__container">
+            <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+            <Button onClick={() => setOpen(true)}>Sign Up</Button>
+          </div>
+        )}
       </div>
 
-      {user ? (
-        <Button onClick={() => auth.signOut()}>Logout</Button>
+      <div className="app__posts">
+        {posts.map(({ id, post }) => (
+          <Post
+            key={id}
+            postId={id}
+            user={user}
+            username={post.username}
+            caption={post.caption}
+            imageUrl={post.imageUrl}
+          />
+        ))}
+      </div>
+
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName} />
       ) : (
-        <div className="login__container">
-          <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
-          <Button onClick={() => setOpen(true)}>Sign Up</Button>
-        </div>
+        <h3>Sorry you need to login first</h3>
       )}
-      <h1>hello</h1>
-      {posts.map(({ id, post }) => (
-        <Post
-          key={id}
-          username={post.username}
-          caption={post.caption}
-          imageUrl={post.imageUrl}
-        />
-      ))}
     </div>
   );
 }
